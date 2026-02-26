@@ -1,51 +1,53 @@
-# Qwen Code Translator
+# Zen Code Docs
 
-A documentation translation tool specifically designed for the github project. Automatically sync documentation from GitHub repositories, translate with Qwen AI, and build a multilingual Nextra documentation site.
+Documentation translation tool for software projects, powered by Zen LM.
+
+Zen Code Docs automatically syncs documentation from GitHub repositories, translates technical content using Zen AI, and builds a multilingual Nextra documentation site.
 
 ## Features
 
-- 🌍 **Multi-language Support**: Translate documentation to Chinese (zh), German (de), French (fr), Russian (ru), and Japanese (ja)
-- 🤖 **Qwen AI Translation**: Powered by Qwen API for high-quality technical document translation
-- 📚 **Nextra Integration**: Automatically generates a modern documentation site using Nextra
-- 🔄 **Git Synchronization**: Automatically syncs with source repositories to keep translations up-to-date
-- ⚡ **CLI Interface**: Easy-to-use command-line interface for all operations
-- 📝 **Smart Translation**: Preserves code blocks, links, and technical terms while translating content
-- 🚀 **Parallel Processing**: Translates multiple languages concurrently for faster processing
+- **Multi-language support**: Translate to Chinese (zh), German (de), French (fr), Russian (ru), Japanese (ja)
+- **Zen AI translation**: High-quality technical document translation via Zen API
+- **Nextra integration**: Generates a modern documentation site automatically
+- **Git synchronization**: Keeps translations in sync with source repositories
+- **Smart translation**: Preserves code blocks, links, and technical terms
+- **Parallel processing**: Translates multiple languages concurrently
 
 ## Installation
 
 ```bash
-npm install -g @qwen-code/translator
+npm install -g @zen/code-docs
 ```
 
 ## Quick Start
 
-1. **Initialize a new translation project**:
+1. Initialize a new translation project:
 
    ```bash
-   qwen-translator init
+   zen-docs init
    ```
 
-2. **Configure environment variables**:
+2. Configure environment variables:
 
    ```bash
    cp .env.example .env
-   # Edit .env file and add your Qwen API key
+   # Edit .env and add your Zen API key
    ```
 
-3. **Sync source repository documents**:
+3. Sync source repository documents:
 
    ```bash
-   qwen-translator sync
+   zen-docs sync
    ```
 
-4. **Translate documents**:
+4. Translate documents:
 
    ```bash
-   qwen-translator translate
+   zen-docs translate
    ```
 
-5. **Start the documentation site**:
+5. Start the documentation site:
+
    ```bash
    npm install
    npm run dev
@@ -80,101 +82,43 @@ Show current project status, configuration, and environment setup.
 
 ## Configuration
 
-The tool creates a `translation.config.json` file during initialization:
-
 ```json
 {
-  "name": "project-name",
-  "sourceRepo": "https://github.com/QwenLM/qwen-code.git",
-  "docsPath": "docs",
-  "sourceLanguage": "en",
-  "targetLanguages": ["zh", "de", "fr", "ru"],
-  "outputDir": "content"
+  "source": {
+    "repo": "https://github.com/your-org/your-project",
+    "docsDir": "docs",
+    "branch": "main"
+  },
+  "target": {
+    "languages": ["zh", "de", "fr", "ru", "ja"]
+  },
+  "zen": {
+    "apiBase": "https://api.zenlm.org/v1",
+    "model": "zenlm/zen-max"
+  }
 }
 ```
 
 ## Environment Variables
 
-Create a `.env` file with the following variables:
-
-```env
-# Required: Qwen API key
-OPENAI_API_KEY=your_qwen_api_key
-
-# Optional: API configuration (defaults shown)
-OPENAI_BASE_URL=https://api.qwen.ai/v1
-QWEN_MODEL=qwen3-coder-plus
-QWEN_MAX_TOKENS=4000
-```
-
-### Alternative API Endpoints
-
-You can also use other compatible endpoints:
-
-```env
-# DashScope (Aliyun)
-OPENAI_BASE_URL=https://dashscope.aliyuncs.com/compatible-mode/v1/
-QWEN_MODEL=qwen-turbo
-```
-
-## Requirements
-
-- Node.js >= 18.0.0
-- npm >= 8.0.0
-- Qwen API key (or compatible OpenAI-format API)
-
-## Project Structure
-
-After initialization, your project will have:
-
-```
-├── content/
-│   ├── en/           # Source language documents (synced from repo)
-│   ├── zh/           # Chinese translations
-│   ├── de/           # German translations
-│   ├── fr/           # French translations
-│   └── ru/           # Russian translations
-├── app/              # Next.js app directory (from template)
-│   ├── [lang]/       # Dynamic language routing
-│   └── layout.tsx    # App layout
-├── .source-docs/     # Raw synced documentation
-├── .temp-source-repo/# Temporary git clone (auto-managed)
-├── translation.config.json
-├── translation-changelog.json  # Translation history
-├── last-sync.json    # Sync tracking
-├── .env.example
-├── next.config.mjs
-└── package.json
+```bash
+ZEN_API_KEY=your-api-key
+ZEN_API_BASE=https://api.zenlm.org/v1
 ```
 
 ## How It Works
 
-1. **Sync**: The tool clones/updates the source repository and detects changed files
-2. **Parse**: Markdown documents are parsed while preserving structure and metadata
-3. **Translate**: Content is segmented and translated using Qwen AI, with smart handling of code blocks and technical terms
-4. **Generate**: Translated content is organized into a Nextra-based multilingual documentation site
-5. **Serve**: The Next.js app serves the documentation with language switching
+1. **Sync**: Clones or pulls the source repository and extracts docs
+2. **Diff**: Identifies changed or new files since last sync
+3. **Translate**: Sends markdown content to Zen API in parallel across languages
+4. **Preserve**: Code blocks, links, and technical identifiers are passed through unchanged
+5. **Build**: Generates Nextra pages with language switcher
 
-## Development
+## Links
 
-```bash
-# Install dependencies
-npm install
-
-# Build the CLI tool
-npm run build
-
-# Run in development mode (watch mode)
-npm run dev
-
-# Run tests
-npm test
-```
+- Models: [huggingface.co/zenlm](https://huggingface.co/zenlm)
+- Docs: [zenlm.org](https://zenlm.org)
 
 ## License
 
-MIT
-
-## Contributing
-
-This tool is specifically designed for the Qwen Code project. For feature requests or bug reports, please open an issue in the project repository.
+Apache 2.0 — Copyright 2024 Zen LM Authors
