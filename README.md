@@ -1,51 +1,54 @@
-# Qwen Code Translator
+# Zen Code Docs — Multilingual Documentation Builder
 
-A documentation translation tool specifically designed for the github project. Automatically sync documentation from GitHub repositories, translate with Qwen AI, and build a multilingual Nextra documentation site.
+A tool for syncing and translating technical documentation into multiple languages, with AI-powered translation via Zen models and a Nextra-based documentation site.
+
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen.svg)](https://nodejs.org/)
 
 ## Features
 
-- 🌍 **Multi-language Support**: Translate documentation to Chinese (zh), German (de), French (fr), Russian (ru), and Japanese (ja)
-- 🤖 **Qwen AI Translation**: Powered by Qwen API for high-quality technical document translation
-- 📚 **Nextra Integration**: Automatically generates a modern documentation site using Nextra
-- 🔄 **Git Synchronization**: Automatically syncs with source repositories to keep translations up-to-date
-- ⚡ **CLI Interface**: Easy-to-use command-line interface for all operations
-- 📝 **Smart Translation**: Preserves code blocks, links, and technical terms while translating content
-- 🚀 **Parallel Processing**: Translates multiple languages concurrently for faster processing
+- **GitHub sync**: Automatically pulls documentation from any GitHub repository
+- **AI translation**: High-quality technical translation via Zen models (preserves code blocks, links, and formatting)
+- **Multi-language**: Supports Chinese (zh), German (de), French (fr), Russian (ru), Japanese (ja)
+- **Nextra docs site**: Generates a modern Next.js documentation site with language switching
+- **Parallel processing**: Translates multiple languages concurrently
+- **Incremental sync**: Tracks changes and only retranslates updated files
 
 ## Installation
 
 ```bash
-npm install -g @qwen-code/translator
+npm install -g @zen/code-docs
 ```
 
 ## Quick Start
 
-1. **Initialize a new translation project**:
+1. Initialize a project:
 
    ```bash
-   qwen-translator init
+   zen-docs init
    ```
 
-2. **Configure environment variables**:
+2. Configure environment variables:
 
    ```bash
    cp .env.example .env
-   # Edit .env file and add your Qwen API key
+   # Edit .env — set ZEN_API_KEY and source repo URL
    ```
 
-3. **Sync source repository documents**:
+3. Sync source documentation:
 
    ```bash
-   qwen-translator sync
+   zen-docs sync
    ```
 
-4. **Translate documents**:
+4. Translate:
 
    ```bash
-   qwen-translator translate
+   zen-docs translate
    ```
 
-5. **Start the documentation site**:
+5. Start the documentation site:
+
    ```bash
    npm install
    npm run dev
@@ -55,20 +58,20 @@ npm install -g @qwen-code/translator
 
 ### `init`
 
-Initialize a new translation project with interactive configuration. Sets up project structure, copies Nextra template, and creates configuration files.
+Initialize a new translation project. Sets up directory structure, Nextra template, and config files.
 
 ### `sync [options]`
 
-Sync source repository documents and automatically translate changes.
+Sync documentation from the source GitHub repository.
 
-- `-f, --force`: Force sync all documents (ignores previous sync records)
+- `-f, --force` — Force sync all documents (ignore previous sync records)
 
 ### `translate [options]`
 
 Translate documents to target languages.
 
-- `-l, --language <lang>`: Specify target language (zh, de, fr, ru, ja)
-- `-f, --file <file>`: Specify single file to translate
+- `-l, --language <lang>` — Target a specific language (zh, de, fr, ru, ja)
+- `-f, --file <file>` — Translate a single file
 
 ### `config`
 
@@ -76,105 +79,80 @@ View and manage project configuration interactively.
 
 ### `status`
 
-Show current project status, configuration, and environment setup.
+Show current project status and environment setup.
 
 ## Configuration
 
-The tool creates a `translation.config.json` file during initialization:
+`translation.config.json` (created during `init`):
 
 ```json
 {
-  "name": "project-name",
-  "sourceRepo": "https://github.com/QwenLM/qwen-code.git",
+  "name": "my-docs",
+  "sourceRepo": "https://github.com/your-org/your-repo.git",
   "docsPath": "docs",
   "sourceLanguage": "en",
-  "targetLanguages": ["zh", "de", "fr", "ru"],
+  "targetLanguages": ["zh", "de", "fr", "ru", "ja"],
   "outputDir": "content"
 }
 ```
 
 ## Environment Variables
 
-Create a `.env` file with the following variables:
-
 ```env
-# Required: Qwen API key
-OPENAI_API_KEY=your_qwen_api_key
+# Required: Zen API key
+ZEN_API_KEY=your_api_key
 
-# Optional: API configuration (defaults shown)
-OPENAI_BASE_URL=https://api.qwen.ai/v1
-QWEN_MODEL=qwen3-coder-plus
-QWEN_MAX_TOKENS=4000
+# Optional: API endpoint (defaults to local vLLM)
+ZEN_BASE_URL=http://localhost:8000/v1
+ZEN_MODEL=zenlm/zen-coder
+ZEN_MAX_TOKENS=4000
 ```
-
-### Alternative API Endpoints
-
-You can also use other compatible endpoints:
-
-```env
-# DashScope (Aliyun)
-OPENAI_BASE_URL=https://dashscope.aliyuncs.com/compatible-mode/v1/
-QWEN_MODEL=qwen-turbo
-```
-
-## Requirements
-
-- Node.js >= 18.0.0
-- npm >= 8.0.0
-- Qwen API key (or compatible OpenAI-format API)
 
 ## Project Structure
 
-After initialization, your project will have:
+After initialization:
 
 ```
 ├── content/
-│   ├── en/           # Source language documents (synced from repo)
+│   ├── en/           # Source language (synced from repo)
 │   ├── zh/           # Chinese translations
 │   ├── de/           # German translations
 │   ├── fr/           # French translations
 │   └── ru/           # Russian translations
-├── app/              # Next.js app directory (from template)
+├── app/              # Next.js app directory
 │   ├── [lang]/       # Dynamic language routing
-│   └── layout.tsx    # App layout
+│   └── layout.tsx
 ├── .source-docs/     # Raw synced documentation
-├── .temp-source-repo/# Temporary git clone (auto-managed)
 ├── translation.config.json
-├── translation-changelog.json  # Translation history
-├── last-sync.json    # Sync tracking
-├── .env.example
-├── next.config.mjs
+├── translation-changelog.json
+├── last-sync.json
 └── package.json
 ```
 
 ## How It Works
 
-1. **Sync**: The tool clones/updates the source repository and detects changed files
-2. **Parse**: Markdown documents are parsed while preserving structure and metadata
-3. **Translate**: Content is segmented and translated using Qwen AI, with smart handling of code blocks and technical terms
-4. **Generate**: Translated content is organized into a Nextra-based multilingual documentation site
-5. **Serve**: The Next.js app serves the documentation with language switching
+1. **Sync** — Clones/updates the source repository and detects changed files
+2. **Parse** — Markdown is parsed while preserving structure and metadata
+3. **Translate** — Content is segmented and translated via Zen models, with smart handling of code blocks and technical terms
+4. **Generate** — Translated content is organized into a Nextra multilingual docs site
+5. **Serve** — Next.js serves the documentation with language switching
 
 ## Development
 
 ```bash
-# Install dependencies
 npm install
-
-# Build the CLI tool
 npm run build
-
-# Run in development mode (watch mode)
-npm run dev
-
-# Run tests
+npm run dev   # watch mode
 npm test
 ```
 
+## Links
+
+- **Zen LM**: https://zenlm.org
+- **Models**: https://huggingface.co/zenlm
+- **GitHub**: https://github.com/zenlm
+- **Hanzo AI**: https://hanzo.ai
+
 ## License
 
-MIT
-
-## Contributing
-
-This tool is specifically designed for the Qwen Code project. For feature requests or bug reports, please open an issue in the project repository.
+Apache 2.0
