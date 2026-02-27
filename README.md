@@ -137,7 +137,7 @@ After initialization:
 4. **Generate** — Translated content is organized into a Nextra multilingual docs site
 5. **Serve** — Next.js serves the documentation with language switching
 
-## Development
+## Links
 
 ```bash
 npm install
