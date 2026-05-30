@@ -104,7 +104,7 @@ ZEN_API_KEY=your_api_key
 
 # Optional: API endpoint (defaults to local vLLM)
 ZEN_BASE_URL=http://localhost:8000/v1
-ZEN_MODEL=zenlm/zen-coder
+ZEN_MODEL=zenlm/zen-5-coder-gguf
 ZEN_MAX_TOKENS=4000
 ```
 
